@@ -1,0 +1,27 @@
+meta {
+  name: add book
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:2000/books
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "title": "Maze Runner",
+    "author":"James Dashner",
+    "publishedYear": 2009,
+    "genre": "Ciencia ficción",
+    "available": true
+    
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

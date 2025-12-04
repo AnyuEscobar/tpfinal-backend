@@ -1,0 +1,21 @@
+meta {
+  name: update book
+  type: http
+  seq: 4
+}
+
+patch {
+  url: http://localhost:2000/books/6918963866d9931380644bd3
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "title": "En llamas"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
