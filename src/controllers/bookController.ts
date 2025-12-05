@@ -42,8 +42,14 @@ class BookController {
 
       const { title, author, publishedYear, genre, available } = body
 
-      if (!title || !author || !publishedYear || !genre || !available) {
-        return res.status(400).json({ message: "Por favor completar todos los datos" })
+      const existingBook = await Book.findOne({ title, author });
+
+      if (existingBook) {
+        return res.status(400).json({ sucess: false, error: "El libro ya existe en nuestra base de datos" })
+      }
+
+      if (!title || !author) {
+        return res.status(400).json({ message: "Por favor completar los datos" })
       }
       const newBook = new Book({ title, author, publishedYear, genre, available })
       await newBook.save()
