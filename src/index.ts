@@ -4,9 +4,17 @@ import cors from "cors"
 import dotenv from "dotenv"
 import bookRouter from "./routes/bookRoutes"
 import authRouter from "./routes/authRoutes"
+import IUserTokenPayload from "./interfaces/IUserTokenPayload"
 
 dotenv.config()
 
+declare global {
+  namespace Express {
+    interface Request {
+      user?: IUserTokenPayload
+    }
+  }
+}
 const PORT = process.env.PORT || 2000;
 
 const app = express()

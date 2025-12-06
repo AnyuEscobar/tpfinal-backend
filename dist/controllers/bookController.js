@@ -97,28 +97,34 @@ var BookController = /** @class */ (function () {
     }); };
     //endpoint post para agregar un libro
     BookController.addBook = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var body, title, author, publishedYear, genre, available, newBook, e_3, error;
+        var body, title, author, publishedYear, genre, available, existingBook, newBook, e_3, error;
         return __generator(_a, function (_b) {
             switch (_b.label) {
                 case 0:
-                    _b.trys.push([0, 2, , 3]);
+                    _b.trys.push([0, 3, , 4]);
                     body = req.body;
                     title = body.title, author = body.author, publishedYear = body.publishedYear, genre = body.genre, available = body.available;
-                    if (!title || !author || !publishedYear || !genre || !available) {
-                        return [2 /*return*/, res.status(400).json({ message: "Por favor completar todos los datos" })];
+                    return [4 /*yield*/, BookModel_1.default.findOne({ title: title, author: author })];
+                case 1:
+                    existingBook = _b.sent();
+                    if (existingBook) {
+                        return [2 /*return*/, res.status(400).json({ sucess: false, error: "El libro ya existe en nuestra base de datos" })];
+                    }
+                    if (!title || !author) {
+                        return [2 /*return*/, res.status(400).json({ message: "Por favor completar los datos" })];
                     }
                     newBook = new BookModel_1.default({ title: title, author: author, publishedYear: publishedYear, genre: genre, available: available });
                     return [4 /*yield*/, newBook.save()];
-                case 1:
+                case 2:
                     _b.sent();
                     res.status(201).json(newBook);
-                    return [3 /*break*/, 3];
-                case 2:
+                    return [3 /*break*/, 4];
+                case 3:
                     e_3 = _b.sent();
                     error = e_3;
                     res.status(500).json({ error: error.message });
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     }); };
