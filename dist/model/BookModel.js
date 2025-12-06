@@ -10,5 +10,6 @@ var bookSchema = new mongoose_1.Schema({
 }, {
     versionKey: false
 });
+bookSchema.index({ title: 1, author: 1 }, { unique: true });
 var Book = (0, mongoose_1.model)("Book", bookSchema);
 exports.default = Book;

@@ -4,6 +4,7 @@ import User from "../model/UserModel"
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
 
+
 dotenv.config()
 
 const SECRET_KEY = process.env.JWT_SECRET!
@@ -12,19 +13,28 @@ class AuthController {
   static register = async (req: Request, res: Response): Promise<void | Response> => {
     try {
       const { email, password } = req.body
+
       if (!email || !password) {
-        return res.status(400).json({ success: false, error: "Por favor completar los campos requeridos" })
+        return res.status(400).json({ success: false, error: "Por favor completar todos los campos requeridos" })
       }
+
+      const user = await User.findOne({ email })
+
+      if (user) {
+        return res.status(409).json({ success: false, error: "Usuario ya registrado." })
+      }
+
       const hash = await bcrypt.hash(password, 10)
       const newUser = new User({ email, password: hash })
 
       await newUser.save()
-      res.status(200).json({ success: true, data: newUser })
-
+      res.status(201).json({ success: true, data: newUser })
     } catch (e) {
       const error = e as Error
-      return res.status(409).json({ success: false, error: "Usuario ya registrado en nuestro servidor" })
-
+      switch (error.name) {
+        case "MongoServerError":
+          return res.status(409).json({ success: false, error: "Usuario ya existente en nuestra base de datos" })
+      }
     }
   }
   static login = async (req: Request, res: Response): Promise<void | Response> => {
@@ -46,7 +56,7 @@ class AuthController {
         return res.status(401).json({ success: false, error: "No autorizado" })
       }
 
-      const token = jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: "1h" })
+      const token = jwt.sign({ id: user._id, email: user.email }, SECRET_KEY, { expiresIn: "1h" })
       res.status(200).json({ success: true, token })
 
     } catch (e) {

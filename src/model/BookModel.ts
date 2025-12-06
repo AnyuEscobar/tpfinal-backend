@@ -12,6 +12,8 @@ const bookSchema = new Schema<IBook>({
   versionKey: false
 })
 
+bookSchema.index({ title: 1, author: 1 }, { unique: true });
+
 const Book: Model<IBook> = model("Book", bookSchema)
 
 export default Book

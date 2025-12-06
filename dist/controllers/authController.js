@@ -51,29 +51,39 @@ var AuthController = /** @class */ (function () {
     var _a;
     _a = AuthController;
     AuthController.register = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var _b, email, password, hash, newUser, e_1, error;
+        var _b, email, password, user, hash, newUser, e_1, error;
         return __generator(_a, function (_c) {
             switch (_c.label) {
                 case 0:
-                    _c.trys.push([0, 3, , 4]);
+                    _c.trys.push([0, 4, , 5]);
                     _b = req.body, email = _b.email, password = _b.password;
                     if (!email || !password) {
-                        return [2 /*return*/, res.status(400).json({ success: false, error: "Por favor completar los campos requeridos" })];
+                        return [2 /*return*/, res.status(400).json({ success: false, error: "Por favor completar todos los campos requeridos" })];
+                    }
+                    return [4 /*yield*/, UserModel_1.default.findOne({ email: email })];
+                case 1:
+                    user = _c.sent();
+                    if (user) {
+                        return [2 /*return*/, res.status(409).json({ success: false, error: "Usuario ya registrado." })];
                     }
                     return [4 /*yield*/, bcryptjs_1.default.hash(password, 10)];
-                case 1:
+                case 2:
                     hash = _c.sent();
                     newUser = new UserModel_1.default({ email: email, password: hash });
                     return [4 /*yield*/, newUser.save()];
-                case 2:
-                    _c.sent();
-                    res.status(200).json({ success: true, data: newUser });
-                    return [3 /*break*/, 4];
                 case 3:
+                    _c.sent();
+                    res.status(201).json({ success: true, data: newUser });
+                    return [3 /*break*/, 5];
+                case 4:
                     e_1 = _c.sent();
                     error = e_1;
-                    return [2 /*return*/, res.status(409).json({ success: false, error: "Usuario ya registrado en nuestro servidor" })];
-                case 4: return [2 /*return*/];
+                    switch (error.name) {
+                        case "MongoServerError":
+                            return [2 /*return*/, res.status(409).json({ success: false, error: "Usuario ya existente en nuestra base de datos" })];
+                    }
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
             }
         });
     }); };
@@ -99,7 +109,7 @@ var AuthController = /** @class */ (function () {
                     if (!isValid) {
                         return [2 /*return*/, res.status(401).json({ success: false, error: "No autorizado" })];
                     }
-                    token = jsonwebtoken_1.default.sign({ id: user._id }, SECRET_KEY, { expiresIn: "1h" });
+                    token = jsonwebtoken_1.default.sign({ id: user._id, email: user.email }, SECRET_KEY, { expiresIn: "1h" });
                     res.status(200).json({ success: true, token: token });
                     return [3 /*break*/, 4];
                 case 3:
