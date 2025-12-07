@@ -5,6 +5,8 @@ import dotenv from "dotenv"
 import bookRouter from "./routes/bookRoutes"
 import authRouter from "./routes/authRoutes"
 import IUserTokenPayload from "./interfaces/IUserTokenPayload"
+import logger from "./config/logger"
+import morgan from "morgan"
 
 dotenv.config()
 
@@ -21,6 +23,9 @@ const app = express()
 
 app.use(cors())
 app.use(express.json())
+app.use(logger)
+app.use(morgan("dev"))
+
 
 app.get("/", (req: Request, res: Response) => {
   res.json({ status: true })
