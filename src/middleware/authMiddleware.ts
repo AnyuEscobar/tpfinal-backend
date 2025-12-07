@@ -1,13 +1,15 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken"
+import { verify } from "jsonwebtoken"
 import IUserTokenPayload from "../interfaces/IUserTokenPayload";
+import dotenv from "dotenv"
+
+dotenv.config()
 
 
 const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const SECRET_KEY = process.env.JWT_SECRET!
   const header = req.headers.authorization
 
-  console.log("Middleware ejecutado")
 
   if (!header) {
     return res.status(401).json({ succes: false, error: "El token es requerido" })
@@ -16,14 +18,14 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const token = header.split(" ")[1]
 
   try {
-    const payload = jwt.verify(token, SECRET_KEY);
+    const payload = verify(token, SECRET_KEY);
 
     req.user = payload as IUserTokenPayload
 
     next()
   } catch (e) {
     const error = e as Error
-    res.status(401).json({ success: false, error: error.message })
+    res.status(401).json({ succes: false, error: error.message })
   }
 }
 
