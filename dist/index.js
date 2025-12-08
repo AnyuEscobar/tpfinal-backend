@@ -9,11 +9,15 @@ var cors_1 = __importDefault(require("cors"));
 var dotenv_1 = __importDefault(require("dotenv"));
 var bookRoutes_1 = __importDefault(require("./routes/bookRoutes"));
 var authRoutes_1 = __importDefault(require("./routes/authRoutes"));
+var logger_1 = __importDefault(require("./config/logger"));
+var morgan_1 = __importDefault(require("morgan"));
 dotenv_1.default.config();
 var PORT = process.env.PORT || 2000;
 var app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
+app.use(logger_1.default);
+app.use((0, morgan_1.default)("dev"));
 app.get("/", function (req, res) {
     res.json({ status: true });
 });
