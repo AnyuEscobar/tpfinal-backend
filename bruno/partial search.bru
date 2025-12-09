@@ -1,0 +1,15 @@
+meta {
+  name: partial search
+  type: http
+  seq: 10
+}
+
+get {
+  url: http://localhost:1000/books
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

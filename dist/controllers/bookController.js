@@ -48,18 +48,33 @@ var BookController = /** @class */ (function () {
     var _a;
     _a = BookController;
     BookController.getAllBooks = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var books, e_1, error;
-        return __generator(_a, function (_b) {
-            switch (_b.label) {
+        var _b, genre, title, author, minYear, maxYear, filters, books, e_1, error;
+        return __generator(_a, function (_c) {
+            switch (_c.label) {
                 case 0:
-                    _b.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, BookModel_1.default.find()];
+                    _c.trys.push([0, 2, , 3]);
+                    _b = req.query, genre = _b.genre, title = _b.title, author = _b.author, minYear = _b.minYear, maxYear = _b.maxYear;
+                    filters = {};
+                    if (genre)
+                        filters.genre = { $regex: genre, $options: "i" };
+                    if (title)
+                        filters.title = { $regex: title, $options: "i" };
+                    if (author)
+                        filters.author = { $regex: author, $options: "i" };
+                    if (minYear || maxYear) {
+                        filters.publishedYear = {};
+                        if (minYear)
+                            filters.publishedYear.$gte = Number(minYear);
+                        if (maxYear)
+                            filters.publishedYear.$lte = Number(maxYear);
+                    }
+                    return [4 /*yield*/, BookModel_1.default.find(filters)];
                 case 1:
-                    books = _b.sent();
+                    books = _c.sent();
                     res.status(200).json({ success: true, data: books });
                     return [3 /*break*/, 3];
                 case 2:
-                    e_1 = _b.sent();
+                    e_1 = _c.sent();
                     error = e_1;
                     res.status(500).json({ success: false, error: error.message });
                     return [3 /*break*/, 3];

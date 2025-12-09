@@ -7,7 +7,24 @@ import { Types } from "mongoose";
 class BookController {
   static getAllBooks = async (req: Request, res: Response): Promise<void | Response> => {
     try {
-      const books = await Book.find()
+
+      //query params
+      const { genre, title, author, minYear, maxYear } = req.query
+
+      const filters: any = {};
+
+      if (genre) filters.genre = { $regex: genre, $options: "i" }
+      if (title) filters.title = { $regex: title, $options: "i" };
+      if (author) filters.author = { $regex: author, $options: "i" }
+
+      if (minYear || maxYear) {
+        filters.publishedYear = {};
+        if (minYear) filters.publishedYear.$gte = Number(minYear);
+        if (maxYear) filters.publishedYear.$lte = Number(maxYear);
+      }
+
+
+      const books = await Book.find(filters)
       res.status(200).json({ success: true, data: books })
     } catch (e) {
       const error = e as Error
