@@ -1,0 +1,6 @@
+::1 GET / 200 15 - 5.390 ms
+::1 GET /favicon.ico 404 39 - 0.994 ms
+::1 GET / 304 - - 0.655 ms
+::1 GET /books?genre=novela 200 159 - 69.252 ms
+::1 GET /books?title=ray 200 159 - 56.543 ms
+::1 GET /books?title=los%20j 200 184 - 54.854 ms

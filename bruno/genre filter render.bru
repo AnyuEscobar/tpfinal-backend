@@ -1,0 +1,20 @@
+meta {
+  name: genre filter render
+  type: http
+  seq: 11
+}
+
+get {
+  url: https://backend-utn-4tf6.onrender.com/books?genre=novela
+  body: none
+  auth: inherit
+}
+
+params:query {
+  genre: novela
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

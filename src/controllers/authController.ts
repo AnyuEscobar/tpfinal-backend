@@ -12,6 +12,7 @@ const SECRET_KEY = process.env.JWT_SECRET!
 class AuthController {
   static register = async (req: Request, res: Response): Promise<void | Response> => {
     try {
+      console.log("BODY RECIBIDO:", req.body)
       const { email, password } = req.body
 
       if (!email || !password) {
@@ -28,7 +29,7 @@ class AuthController {
       const newUser = new User({ email, password: hash })
 
       await newUser.save()
-      res.status(201).json({ success: true, data: newUser })
+      res.status(201).json({ success: true, newUser })
     } catch (e) {
       const error = e as Error
       switch (error.name) {

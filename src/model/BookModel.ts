@@ -5,7 +5,7 @@ import IBook from "../interfaces/IBook"
 const bookSchema = new Schema<IBook>({
   title: { type: String, required: true },
   author: { type: String, required: true },
-  publishedYear: { type: Number, required: true },
+  publishedYear: { type: Number },
   genre: { type: String, default: "Indefinido" },
   available: { type: Boolean, default: true }
 }, {
